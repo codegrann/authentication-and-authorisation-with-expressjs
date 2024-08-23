@@ -22,6 +22,13 @@
       <button type="submit">Update Profile</button>
     </form>
 
+    <h2>Delete User Account</h2>
+    <form id="delete-user-form">
+      <label for="other-username">Username to delete:</label>
+      <input type="text" id="other-username" name="other-username" required />
+      <button type="submit">Delete User</button>
+    </form>
+
     <script>
       async function loadUserProfile() {
         const response = await fetch("http://127.0.0.1:4001/auth/user", {
@@ -57,6 +64,29 @@
           if (result.ok) {
             alert("Profile updated successfully");
             return;
+          } else {
+            alert(result.message);
+          }
+        });
+
+      document
+        .getElementById("delete-user-form")
+        .addEventListener("submit", async function (event) {
+          event.preventDefault();
+          const username = document.getElementById("other-username").value;
+          const response = await fetch(
+            `http://localhost:4001/auth/delete/user`,
+            {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ username }),
+              credentials: "include",
+            }
+          );
+          const result = await response.json();
+          if (result.ok) {
+            alert("User deleted successfully");
+            // Redirect or update UI
           } else {
             alert(result.message);
           }
